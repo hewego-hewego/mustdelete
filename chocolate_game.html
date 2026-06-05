@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카카오빈 초콜릿 제조 게임</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #3a1f0b 0%, #7b4f22 100%);
+            color: #fff;
+        }
+        .game-shell {
+            width: min(980px, 92%);
+            background: rgba(20, 10, 5, 0.92);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 24px;
+            box-shadow: 0 20px 80px rgba(0,0,0,0.35);
+            overflow: hidden;
+        }
+        header {
+            padding: 28px 32px;
+            background: rgba(255,255,255,0.08);
+            text-align: center;
+        }
+        header h1 {
+            font-size: clamp(2.4rem, 4vw, 3.6rem);
+            margin-bottom: 12px;
+        }
+        header p {
+            color: #f0e6d6;
+            font-size: 1rem;
+            line-height: 1.7;
+            max-width: 760px;
+            margin: 0 auto;
+        }
+        .content {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 24px;
+            padding: 30px 32px 32px;
+        }
+        .panel {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .panel h2 {
+            margin-bottom: 16px;
+            font-size: 1.5rem;
+        }
+        .panel p {
+            line-height: 1.7;
+            color: #e7dcc7;
+        }
+        .controls {
+            margin-top: 24px;
+            display: grid;
+            gap: 16px;
+        }
+        .choice-grid {
+            display: grid;
+            gap: 12px;
+        }
+        .choice-btn,
+        .small-btn {
+            border: none;
+            border-radius: 14px;
+            padding: 16px 18px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .choice-btn {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            text-align: left;
+        }
+        .choice-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 35px rgba(0,0,0,0.18);
+            background: rgba(255,255,255,0.18);
+        }
+        .choice-btn.selected {
+            background: linear-gradient(135deg, #d68b44 0%, #f5cc8d 100%);
+            color: #3a1f0b;
+        }
+        .small-btn {
+            background: #d68b44;
+            color: #3a1f0b;
+        }
+        .small-btn:hover {
+            background: #f2bc5a;
+        }
+        .progress {
+            margin-top: 20px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.12);
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(135deg, #ffe28a, #ffb84c);
+            transition: width 0.3s ease;
+        }
+        .status {
+            margin-top: 18px;
+            padding: 18px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 14px;
+            min-height: 120px;
+        }
+        .status h3 {
+            margin-bottom: 10px;
+            font-size: 1.15rem;
+        }
+        .status p {
+            color: #f7f1dc;
+        }
+        .result-block {
+            margin-top: 20px;
+            display: grid;
+            gap: 14px;
+        }
+        .result-item {
+            padding: 16px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .result-item h4 {
+            margin: 0 0 8px;
+            font-size: 1rem;
+            color: #fff;
+        }
+        .result-item p {
+            margin: 0;
+            color: #f6ebcf;
+            line-height: 1.7;
+        }
+        .image-card {
+            padding: 22px;
+            display: grid;
+            gap: 16px;
+            align-content: start;
+        }
+        .image-card img {
+            width: 100%;
+            border-radius: 18px;
+            box-shadow: 0 16px 42px rgba(0,0,0,0.25);
+        }
+        .score-box {
+            display: grid;
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .score-badge,
+        .step-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 14px;
+            border-radius: 999px;
+            font-weight: 700;
+        }
+        .score-badge {
+            background: rgba(255,255,255,0.14);
+            color: #fff;
+        }
+        .step-badge {
+            background: rgba(255,255,255,0.10);
+            color: #f8eac8;
+        }
+        .bottom-nav {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        .nav-link {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            transition: background 0.2s ease;
+        }
+        .nav-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        @media (max-width: 860px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-shell">
+        <header>
+            <h1>카카오빈에서 초콜릿까지</h1>
+            <p>카카오빈을 골라서 로스팅하고 분쇄한 뒤, 초콜릿으로 완성하세요. 각 단계에서 올바른 선택을 하면 더 맛있는 초콜릿이 됩니다.</p>
+        </header>
+        <div class="content">
+            <section class="panel">
+                <h2 id="stageTitle">단계 1: 카카오빈 선택</h2>
+                <p id="stageDescription">카카오빈을 골라주세요. 좋은 원료를 선택해야 초콜릿 맛이 살아납니다.</p>
+
+                <div class="controls" id="controls"></div>
+
+                <div class="status">
+                    <h3>현재 상태</h3>
+                    <p id="statusText">게임을 시작하면 단계별 진행 상황이 표시됩니다.</p>
+                </div>
+
+                <div class="progress">
+                    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                </div>
+                <div class="score-box">
+                    <span class="score-badge">점수: <strong id="scoreValue">0</strong></span>
+                    <span class="step-badge">단계 <strong id="stepCount">1</strong> / 5</span>
+                </div>
+            </section>
+            <aside class="panel image-card">
+                <img id="stageImage" src="https://images.unsplash.com/photo-1488459716781-31db52582fe9?q=80&w=1200&auto=format&fit=crop" alt="카카오빈에서 초콜릿까지">
+                <div class="bottom-nav">
+                    <a href="index.html" class="nav-link">메인화면으로</a>
+                    <a href="gallery.html" class="nav-link">갤러리로</a>
+                    <button class="nav-link" id="restartButton">다시 시작</button>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        const steps = [
+            {
+                title: '카카오빈 선택',
+                description: '가장 좋은 카카오빈을 선택하세요. 재료가 초콜릿의 기본 맛을 결정합니다.',
+                image: 'https://images.unsplash.com/photo-1582738418257-2c7e1b1d4d55?q=80&w=1200&auto=format&fit=crop',
+                choices: [
+                    { label: '완숙 카카오빈', score: 20, result: '윤기 있고 고소한 원료를 선택했습니다.' },
+                    { label: '미성숙 카카오빈', score: 5, result: '맛이 약하고 쓴맛이 도는 원료입니다.' },
+                    { label: '과숙 카카오빈', score: 10, result: '약간 건조하고 씁쓸함이 강할 수 있습니다.' }
+                ]
+            },
+            {
+                title: '로스팅 시간 결정',
+                description: '로스팅 시간을 선택하세요. 너무 길거나 짧으면 맛이 달라집니다.',
+                image: 'https://images.unsplash.com/photo-1514432324607-a09d816a35e6?q=80&w=1200&auto=format&fit=crop',
+                choices: [
+                    { label: '10분', score: 20, result: '적절히 로스팅되어 향이 잘 살아났습니다.' },
+                    { label: '6분', score: 8, result: '덜 익어 산미가 강할 수 있습니다.' },
+                    { label: '14분', score: 10, result: '로스팅이 조금 강해 쓴맛이 올라옵니다.' }
+                ]
+            },
+            {
+                title: '분쇄도 선택',
+                description: '분쇄도를 정하세요. 너무 굵거나 너무 고우면 텍스처가 달라집니다.',
+                image: 'https://images.unsplash.com/photo-1526740613911-19a9f01e4be3?q=80&w=1200&auto=format&fit=crop',
+                slider: {
+                    min: 1,
+                    max: 10,
+                    idealLow: 4,
+                    idealHigh: 7,
+                    prompt: '분쇄도 슬라이더를 조정하고 [분쇄하기]를 누르세요.'
+                }
+            },
+            {
+                title: '재료 혼합',
+                description: '초콜릿을 만드는 핵심 재료를 선택하세요.',
+                image: 'https://images.unsplash.com/photo-1600185364415-3d95005b6e8d?q=80&w=1200&auto=format&fit=crop',
+                choices: [
+                    { label: '코코아버터 + 우유', score: 18, result: '화이트 초콜릿의 기본 재료를 선택했습니다.' },
+                    { label: '우유 첨가', score: 16, result: '우유가 더해져 부드러운 밀크 초콜릿이 만들어집니다.' },
+                    { label: '설탕 많이', score: 8, result: '단맛이 강하지만 카카오 향이 조금 묻힐 수 있습니다.' },
+                    { label: '견과류 추가', score: 14, result: '견과류가 더해져 고소한 아몬드 초콜릿 스타일이 됩니다.' }
+                ]
+            },
+            {
+                title: '템퍼링 & 몰드',
+                description: '템퍼링과 몰딩으로 최종 초콜릿을 완성하세요.',
+                image: 'https://images.unsplash.com/photo-1604908177523-1ba4e43d1d26?q=80&w=1200&auto=format&fit=crop',
+                actionLabel: '초콜릿 완성하기',
+                result: '모든 단계가 완료되었습니다. 결과를 확인해보세요!' 
+            }
+        ];
+
+        let currentStep = 0;
+        let score = 0;
+        let grindValue = 6;
+        let selectedChoices = [];
+
+        const controls = document.getElementById('controls');
+        const stageTitle = document.getElementById('stageTitle');
+        const stageDescription = document.getElementById('stageDescription');
+        const stageImage = document.getElementById('stageImage');
+        const statusText = document.getElementById('statusText');
+        const progressFill = document.getElementById('progressFill');
+        const scoreValue = document.getElementById('scoreValue');
+        const stepCount = document.getElementById('stepCount');
+        const restartButton = document.getElementById('restartButton');
+
+        restartButton.addEventListener('click', resetGame);
+
+        function renderStep() {
+            const step = steps[currentStep];
+            stageTitle.textContent = `단계 ${currentStep + 1}: ${step.title}`;
+            stageDescription.textContent = step.description;
+            stageImage.src = step.image;
+            stepCount.textContent = currentStep + 1;
+            progressFill.style.width = `${((currentStep) / (steps.length - 1)) * 100}%`;
+            controls.innerHTML = '';
+
+            if (step.choices) {
+                const grid = document.createElement('div');
+                grid.className = 'choice-grid';
+                step.choices.forEach(choice => {
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'choice-btn';
+                    button.textContent = choice.label;
+                    button.addEventListener('click', () => selectChoice(choice, button));
+                    grid.appendChild(button);
+                });
+                controls.appendChild(grid);
+            } else if (step.slider) {
+                const sliderGroup = document.createElement('div');
+                sliderGroup.className = 'choice-grid';
+                const sliderLabel = document.createElement('p');
+                sliderLabel.textContent = step.slider.prompt;
+                const slider = document.createElement('input');
+                slider.type = 'range';
+                slider.min = step.slider.min;
+                slider.max = step.slider.max;
+                slider.value = grindValue;
+                slider.addEventListener('input', () => {
+                    grindValue = Number(slider.value);
+                    sliderLabel.textContent = `${step.slider.prompt} (${grindValue})`;
+                });
+                const grindBtn = document.createElement('button');
+                grindBtn.type = 'button';
+                grindBtn.className = 'choice-btn';
+                grindBtn.textContent = '분쇄하기';
+                grindBtn.addEventListener('click', finishGrinding);
+                sliderGroup.appendChild(sliderLabel);
+                sliderGroup.appendChild(slider);
+                sliderGroup.appendChild(grindBtn);
+                controls.appendChild(sliderGroup);
+            } else {
+                const action = document.createElement('button');
+                action.type = 'button';
+                action.className = 'small-btn';
+                action.textContent = step.actionLabel || '진행하기';
+                action.addEventListener('click', finishFinalStep);
+                controls.appendChild(action);
+            }
+        }
+
+        function selectChoice(choice, button) {
+            const buttons = controls.querySelectorAll('.choice-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+            score += choice.score;
+            selectedChoices.push({ step: steps[currentStep].title, choice: choice.label });
+            scoreValue.textContent = score;
+            statusText.textContent = choice.result;
+            advanceStep();
+        }
+
+        function finishGrinding() {
+            const step = steps[currentStep];
+            let result;
+            if (grindValue >= step.slider.idealLow && grindValue <= step.slider.idealHigh) {
+                score += 18;
+                result = `분쇄도가 적당합니다. 매끄럽고 부드러운 질감이 기대돼요! (${grindValue})`;
+            } else if (grindValue < step.slider.idealLow) {
+                score += 8;
+                result = `분쇄도가 너무 거칩니다. 텍스처가 다소 거칠어질 수 있어요. (${grindValue})`;
+            } else {
+                score += 10;
+                result = `분쇄도가 너무 고와요. 좀 더 진한 초콜릿 감각이 약해질 수 있어요. (${grindValue})`;
+            }
+            selectedChoices.push({ step: step.title, choice: `분쇄도 ${grindValue}` });
+            scoreValue.textContent = score;
+            statusText.textContent = result;
+            advanceStep();
+        }
+
+        function finishFinalStep() {
+            const step = steps[currentStep];
+            selectedChoices.push({ step: step.title, choice: step.actionLabel || '템퍼링 완료' });
+            statusText.textContent = step.result;
+            score += 15;
+            scoreValue.textContent = score;
+            currentStep++;
+            progressFill.style.width = '100%';
+            showFinalResult();
+        }
+
+        function advanceStep() {
+            currentStep += 1;
+            if (currentStep < steps.length - 1) {
+                renderStep();
+            } else if (currentStep === steps.length - 1) {
+                renderStep();
+            } else {
+                showFinalResult();
+            }
+        }
+
+        function showFinalResult() {
+            controls.innerHTML = '';
+            const chocolateType = getChocolateType();
+            stageTitle.textContent = `완성: ${chocolateType.type}이 만들어졌습니다!`;
+            stageDescription.textContent = `그동안의 선택으로 ${chocolateType.type}이 완성되었습니다. 결과를 확인하고 다시 도전해보세요.`;
+            stageImage.src = chocolateType.image;
+            progressFill.style.width = '100%';
+            stepCount.textContent = steps.length;
+            const finalMsg = document.createElement('p');
+            finalMsg.innerHTML = getFinalMessage(chocolateType.type);
+            controls.appendChild(finalMsg);
+
+            const resultBlock = document.createElement('div');
+            resultBlock.className = 'result-block';
+            selectedChoices.forEach(item => {
+                const itemBlock = document.createElement('div');
+                itemBlock.className = 'result-item';
+                const title = document.createElement('h4');
+                title.textContent = item.step;
+                const detail = document.createElement('p');
+                detail.innerHTML = getImpactMessage(item.step, item.choice);
+                itemBlock.appendChild(title);
+                itemBlock.appendChild(detail);
+                resultBlock.appendChild(itemBlock);
+            });
+            controls.appendChild(resultBlock);
+
+            const retryBtn = document.createElement('button');
+            retryBtn.type = 'button';
+            retryBtn.className = 'small-btn';
+            retryBtn.textContent = '다시 도전하기';
+            retryBtn.addEventListener('click', resetGame);
+            controls.appendChild(retryBtn);
+        }
+
+        function getChocolateType() {
+            const beanChoice = selectedChoices.find(item => item.step === '카카오빈 선택')?.choice;
+            const roastChoice = selectedChoices.find(item => item.step === '로스팅 시간 결정')?.choice;
+            const mixChoice = selectedChoices.find(item => item.step === '재료 혼합')?.choice;
+            if (mixChoice === '견과류 추가') {
+                return {
+                    type: '아몬드 초콜릿',
+                    image: 'https://images.unsplash.com/photo-1600185364415-3d95005b6e8d?q=80&w=1200&auto=format&fit=crop'
+                };
+            }
+            if (mixChoice === '코코아버터 + 우유') {
+                return {
+                    type: '화이트 초콜릿',
+                    image: 'https://images.unsplash.com/photo-1510070009289-b5bc34383727?q=80&w=1200&auto=format&fit=crop'
+                };
+            }
+            if (mixChoice === '우유 첨가') {
+                return {
+                    type: '밀크 초콜릿',
+                    image: 'https://images.unsplash.com/photo-1548907040-4baa42d10919?q=80&w=1200&auto=format&fit=crop'
+                };
+            }
+            if (beanChoice === '과숙 카카오빈' || roastChoice === '14분') {
+                return {
+                    type: '다크 초콜릿',
+                    image: 'https://images.unsplash.com/photo-1511381939415-e44015466834?q=80&w=1200&auto=format&fit=crop'
+                };
+            }
+            return {
+                type: '기본 초콜릿',
+                image: 'https://images.unsplash.com/photo-1548907040-4baa42d10919?q=80&w=1200&auto=format&fit=crop'
+            };
+        }
+
+        function getImpactMessage(stepTitle, choice) {
+            switch (stepTitle) {
+                case '카카오빈 선택':
+                    if (choice === '완숙 카카오빈') {
+                        return `완숙 카카오빈을 골라 초콜릿의 기본 풍미가 풍부해졌습니다. 풍부한 너트 향과 부드러운 단맛이 잘 살아납니다.`;
+                    }
+                    if (choice === '미성숙 카카오빈') {
+                        return `미성숙 카카오빈은 초콜릿에 덜 익은 맛과 약간의 쓴맛을 남길 수 있습니다. 단맛과 풍미가 약하게 느껴질 가능성이 큽니다.`;
+                    }
+                    return `과숙 카카오빈은 초콜릿에 묵직한 씁쓸함을 더합니다. 질감이 조금 건조해지고 단맛이 덜 느껴질 수 있습니다.`;
+                case '로스팅 시간 결정':
+                    if (choice === '10분') {
+                        return `적절한 로스팅은 카카오 향과 단맛을 잘 끌어냅니다. 초콜릿에 균형 잡힌 쓴맛과 향이 모두 살아납니다.`;
+                    }
+                    if (choice === '6분') {
+                        return `짧은 로스팅은 산미를 남기고 향이 덜 강하게 됩니다. 초콜릿이 다소 가볍고 깔끔하지만 풍미가 부족할 수 있습니다.`;
+                    }
+                    return `길게 로스팅하면 쓴맛이 강해지고 깊은 카라멜 향이 올라옵니다. 다만 균형이 조금 깨질 수 있습니다.`;
+                case '분쇄도 선택':
+                    if (choice.startsWith('분쇄도 ') && Number(choice.split('분쇄도 ')[1]) >= 4 && Number(choice.split('분쇄도 ')[1]) <= 7) {
+                        return `적정 분쇄도는 입안에서 부드러운 질감을 제공하고, 초콜릿이 자연스럽게 녹는 감각을 살립니다.`;
+                    }
+                    if (choice.startsWith('분쇄도 ') && Number(choice.split('분쇄도 ')[1]) < 4) {
+                        return `굵은 분쇄는 질감이 거칠어지고 초콜릿이 단단하게 느껴질 수 있습니다. 풍미가 고루 퍼지기 어려울 수 있습니다.`;
+                    }
+                    return `매우 고운 분쇄는 텍스처는 부드러우나, 입 안에서 너무 빠르게 녹아 감칠맛이 약해질 수 있습니다.`;
+                case '재료 혼합':
+                    if (choice === '코코아버터 + 우유') {
+                        return `코코아버터와 우유를 선택해 화이트 초콜릿 스타일을 만들었습니다. 카카오 매스 대신 부드러운 우유 단맛과 크리미한 텍스처가 강조됩니다.`;
+                    }
+                    if (choice === '우유 첨가') {
+                        return `우유를 첨가해 밀크 초콜릿을 만들었습니다. 카카오의 쌉쌀함에 부드러운 우유 단맛이 더해져 균형 잡힌 맛이 나옵니다.`;
+                    }
+                    if (choice === '설탕 많이') {
+                        return `설탕을 많이 넣으면 단맛이 강해지지만, 카카오 고유의 풍미가 덜 살아납니다. 기본 초콜릿 느낌으로 남을 수 있습니다.`;
+                    }
+                    return `견과류가 추가되어 텍스처가 고소하고 씹는 맛이 살아납니다. 전체적인 풍미에 아몬드 향이 더해집니다.`;
+                case '템퍼링 & 몰드':
+                    return `템퍼링과 몰드는 초콜릿의 광택과 식감을 결정합니다. 잘된 템퍼링은 부서지기 쉬운 결을 만들고, 입 안에서 깔끔하게 녹습니다.`;
+                default:
+                    return `이 선택은 최종 초콜릿 맛과 질감에 영향을 미쳤습니다.`;
+            }
+        }
+
+        function getFinalMessage(chocolateType) {
+            const [bean, roast, grind, mix, finalStep] = selectedChoices;
+            const base = `이번 제조에서는 ${bean ? bean.choice : '카카오빈'} 선택, ${roast ? roast.choice : '로스팅'}, ${grind ? grind.choice : '분쇄'}, ${mix ? mix.choice : '혼합'} 과정을 거쳤습니다. 마지막 단계는 ${finalStep ? finalStep.choice : '완성'}이었습니다.`;
+            if (score >= 80) {
+                return `${base} 결과적으로 <strong>${chocolateType}</strong>이 탄생했습니다. 점수 ${score}점으로 감칠맛과 향미가 모두 살아난 초콜릿입니다.`;
+            }
+            if (score >= 60) {
+                return `${base} 결과적으로 <strong>${chocolateType}</strong>이 만들어졌습니다. 점수 ${score}점으로 달콤하고 부드러운 초콜릿이 되었지만, 약간의 개선 여지가 있습니다.`;
+            }
+            return `${base} 결과적으로 <strong>${chocolateType}</strong>이 되었으며, 점수 ${score}점으로 다음 번에는 선택을 조금 더 신중히 하면 더욱 맛있는 초콜릿을 만들 수 있어요.`;
+        }
+
+        function resetGame() {
+            currentStep = 0;
+            score = 0;
+            grindValue = 6;
+            selectedChoices = [];
+            scoreValue.textContent = score;
+            statusText.textContent = '새로운 제조 과정을 시작합니다. 카카오빈 선택부터 시작해보세요!';
+            renderStep();
+        }
+
+        resetGame();
+    </script>
+</body>
+</html>
