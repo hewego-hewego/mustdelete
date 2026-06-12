@@ -129,7 +129,7 @@
         <button id="actionButton" onclick="handleAction()">초콜릿 뽑기</button>
     </div>
 
-    <script src="lang.js"></script>
+    <script src="./lang.js"></script>
     <script>
         const translations = {
             pageTitle: { ko: '랜덤 초콜릿 & 아이스크림 갤러리', en: 'Random Chocolate & Ice Cream Gallery' },
@@ -293,7 +293,7 @@
             }
         }
 
-        initLanguagePage();
+        if (typeof initLanguagePage === 'function') initLanguagePage();
     </script>
 </body>
 </html>
