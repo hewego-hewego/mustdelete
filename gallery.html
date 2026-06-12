@@ -109,7 +109,7 @@
 
 <body>
 
-    <a href="index.html" class="home-btn">← 메인화면</a>
+    <a id="homeButton" href="index.html" class="home-btn">← 메인화면</a>
 
     <div class="container">
         <div class="mode-buttons">
@@ -129,110 +129,148 @@
         <button id="actionButton" onclick="handleAction()">초콜릿 뽑기</button>
     </div>
 
+    <script src="lang.js"></script>
     <script>
-        const chocolates = [
-    {
-        title: "밀크 초콜릿",
-        desc: "부드럽고 달콤한 클래식 초콜릿",
-        image: "https://images.unsplash.com/photo-1548907040-4baa42d10919?q=80&w=1200&auto=format&fit=crop",
-        background: "linear-gradient(135deg, #5c3a21, #c69c6d)"
-    },
-    {
-        title: "다크 초콜릿",
-        desc: "진한 카카오의 깊은 풍미",
-        image: "https://images.unsplash.com/photo-1511381939415-e44015466834?q=80&w=1200&auto=format&fit=crop",
-        background: "linear-gradient(135deg, #1e1e1e, #4b2e2e)"
-    },
-    {
-        title: "화이트 초콜릿",
-        desc: "부드럽고 크리미한 달콤함",
-        image: "https://images.unsplash.com/photo-1481391032119-d89fee407e44?q=80&w=1200&auto=format&fit=crop",
-        background: "linear-gradient(135deg, #fff3d6, #f7d9aa)"
-    },
-    {
-        title: "딸기 초콜릿",
-        desc: "상큼한 딸기와 달콤한 초콜릿의 조화",
-        image: "https://images.unsplash.com/photo-1464306076886-da185f6a9d05?q=80&w=1200&auto=format&fit=crop",
-        background: "linear-gradient(135deg, #ff7aa2, #ffd1dc)"
-    },
-    {
-        title: "민트 초콜릿",
-        desc: "시원하고 달콤한 민트 향",
-        image: "https://images.unsplash.com/photo-1571506165871-ee72a35bc9d4?q=80&w=1200&auto=format&fit=crop",
-        background: "linear-gradient(135deg, #3eb489, #b8f2e6)"
-    }
-];
+        const translations = {
+            pageTitle: { ko: '랜덤 초콜릿 & 아이스크림 갤러리', en: 'Random Chocolate & Ice Cream Gallery' },
+            headingChocolate: { ko: '🍫 랜덤 초콜릿', en: '🍫 Random Chocolate' },
+            headingIcecream: { ko: '🍨 랜덤 아이스크림', en: '🍨 Random Ice Cream' },
+            modeChocolate: { ko: '초콜릿 모드', en: 'Chocolate Mode' },
+            modeIcecream: { ko: '아이스크림 모드', en: 'Ice Cream Mode' },
+            actionChocolate: { ko: '초콜릿 뽑기', en: 'Pick Chocolate' },
+            actionIcecream: { ko: '아이스크림 뽑기', en: 'Pick Ice Cream' },
+            homeButton: { ko: '← 메인화면', en: '← Home' }
+        };
 
-const icecreams = [
-    {
-        title: "스트로베리 아이스크림",
-        desc: "상큼한 딸기맛 아이스크림",
-        image: "https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?q=80&w=1200&auto=format&fit=crop",
-        background: "linear-gradient(135deg, #ffd1dc, #ff7aa2)"
-    },
-    {
-        title: "바닐라 아이스크림",
-        desc: "부드럽고 클래식한 바닐라",
-        image: "https://images.unsplash.com/photo-1570197788417-0e82375c9371?q=80&w=1200&auto=format&fit=crop",
-        background: "linear-gradient(135deg, #fff8e7, #f3e4c7)"
-    },
-    {
-        title: "초코 아이스크림",
-        desc: "진한 초콜릿 아이스크림",
-        image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?q=80&w=1200&auto=format&fit=crop",
-        background: "linear-gradient(135deg, #4b2e2e, #c69c6d)"
-    },
-    {
-        title: "민트 초코칩",
-        desc: "시원한 민트와 초코칩의 조화",
-        image: "https://images.unsplash.com/photo-1579954115545-a95591f28bfc?q=80&w=1200&auto=format&fit=crop",
-        background: "linear-gradient(135deg, #b8f2e6, #3eb489)"
-    },
-    {
-        title: "말차 아이스크림",
-        desc: "부드럽고 쌉쌀한 말차 풍미",
-        image: "https://images.unsplash.com/photo-1517093157656-b9eccef91cb1?q=80&w=1200&auto=format&fit=crop",
-        background: "linear-gradient(135deg, #9dbf9e, #dff0e0)"
-    },
-    {
-        title: "블루베리 소르베",
-        desc: "상큼한 블루베리 소르베",
-        image: "https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?q=80&w=1200&auto=format&fit=crop",
-        background: "linear-gradient(135deg, #a0c4ff, #bdb2ff)"
-    }
-];
+        const chocolates = [
+            {
+                title: '밀크 초콜릿',
+                titleEn: 'Milk Chocolate',
+                desc: '부드럽고 달콤한 클래식 초콜릿',
+                descEn: 'Soft and sweet classic chocolate',
+                image: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?q=80&w=1200&auto=format&fit=crop',
+                background: 'linear-gradient(135deg, #5c3a21, #c69c6d)'
+            },
+            {
+                title: '다크 초콜릿',
+                titleEn: 'Dark Chocolate',
+                desc: '진한 카카오의 깊은 풍미',
+                descEn: 'Rich cocoa with deep flavor',
+                image: 'https://images.unsplash.com/photo-1511381939415-e44015466834?q=80&w=1200&auto=format&fit=crop',
+                background: 'linear-gradient(135deg, #1e1e1e, #4b2e2e)'
+            },
+            {
+                title: '화이트 초콜릿',
+                titleEn: 'White Chocolate',
+                desc: '부드럽고 크리미한 달콤함',
+                descEn: 'Smooth and creamy sweetness',
+                image: 'https://images.unsplash.com/photo-1548907040-4baa42d10919?q=80&w=1200&auto=format&fit=crop',
+                background: 'linear-gradient(135deg, #fff3d6, #f7d9aa)'
+            },
+            {
+                title: '딸기 초콜릿',
+                titleEn: 'Strawberry Chocolate',
+                desc: '상큼한 딸기와 달콤한 초콜릿의 조화',
+                descEn: 'A tangy strawberry and sweet chocolate blend',
+                image: 'https://images.unsplash.com/photo-1464306076886-da185f6a9d05?q=80&w=1200&auto=format&fit=crop',
+                background: 'linear-gradient(135deg, #ff7aa2, #ffd1dc)'
+            },
+            {
+                title: '민트 초콜릿',
+                titleEn: 'Mint Chocolate',
+                desc: '시원하고 달콤한 민트 향',
+                descEn: 'Cool and sweet mint flavor',
+                image: 'https://images.unsplash.com/photo-1571506165871-ee72a35bc9d4?q=80&w=1200&auto=format&fit=crop',
+                background: 'linear-gradient(135deg, #3eb489, #b8f2e6)'
+            }
+        ];
+
+        const icecreams = [
+            {
+                title: '스트로베리 아이스크림',
+                titleEn: 'Strawberry Ice Cream',
+                desc: '상큼한 딸기맛 아이스크림',
+                descEn: 'Tangy strawberry flavored ice cream',
+                image: 'https://images.unsplash.com/photo-1497034825429-c343d7c6a68f?q=80&w=1200&auto=format&fit=crop',
+                background: 'linear-gradient(135deg, #ffd1dc, #ff7aa2)'
+            },
+            {
+                title: '바닐라 아이스크림',
+                titleEn: 'Vanilla Ice Cream',
+                desc: '부드럽고 클래식한 바닐라',
+                descEn: 'Smooth and classic vanilla',
+                image: 'https://images.unsplash.com/photo-1570197788417-0e82375c9371?q=80&w=1200&auto=format&fit=crop',
+                background: 'linear-gradient(135deg, #fff8e7, #f3e4c7)'
+            },
+            {
+                title: '초코 아이스크림',
+                titleEn: 'Chocolate Ice Cream',
+                desc: '진한 초콜릿 아이스크림',
+                descEn: 'Rich chocolate ice cream',
+                image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?q=80&w=1200&auto=format&fit=crop',
+                background: 'linear-gradient(135deg, #4b2e2e, #c69c6d)'
+            },
+            {
+                title: '말차 아이스크림',
+                titleEn: 'Matcha Ice Cream',
+                desc: '부드럽고 쌉쌀한 말차 풍미',
+                descEn: 'Smooth and slightly bitter matcha flavor',
+                image: 'https://images.unsplash.com/photo-1517093157656-b9eccef91cb1?q=80&w=1200&auto=format&fit=crop',
+                background: 'linear-gradient(135deg, #9dbf9e, #dff0e0)'
+            },
+            {
+                title: '블루베리 소르베',
+                titleEn: 'Blueberry Sorbet',
+                desc: '상큼한 블루베리 소르베',
+                descEn: 'Refreshing blueberry sorbet',
+                image: 'https://images.unsplash.com/photo-1488900128323-21503983a07e?q=80&w=1200&auto=format&fit=crop',
+                background: 'linear-gradient(135deg, #a0c4ff, #bdb2ff)'
+            }
+        ];
 
         let currentMode = 'chocolate';
+        let currentLang = 'ko';
 
-        function setMode(mode) {
-            currentMode = mode;
-
-            document.getElementById('chocoModeBtn').classList.toggle('active', mode === 'chocolate');
-            document.getElementById('iceModeBtn').classList.toggle('active', mode === 'icecream');
-
-            if (mode === 'chocolate') {
-                applyChocolate(chocolates[0]);
-                document.getElementById('actionButton').textContent = '초콜릿 뽑기';
-                document.getElementById('mainHeading').textContent = '🍫 랜덤 초콜릿';
-            } else {
-                applyIcecream(icecreams[0]);
-                document.getElementById('actionButton').textContent = '아이스크림 뽑기';
-                document.getElementById('mainHeading').textContent = '🍨 랜덤 아이스크림';
-            }
+        function localizeItem(item, key) {
+            return currentLang === 'en' && item[`${key}En`] ? item[`${key}En`] : item[key];
         }
 
         function applyChocolate(item) {
             document.getElementById('mainImage').src = item.image;
-            document.getElementById('mainTitle').textContent = item.title;
-            document.getElementById('mainDesc').textContent = item.desc;
+            document.getElementById('mainImage').alt = currentLang === 'en' ? 'Representative image' : '대표 이미지';
+            document.getElementById('mainTitle').textContent = localizeItem(item, 'title');
+            document.getElementById('mainDesc').textContent = localizeItem(item, 'desc');
             document.body.style.background = item.background;
         }
 
         function applyIcecream(item) {
             document.getElementById('mainImage').src = item.image;
-            document.getElementById('mainTitle').textContent = item.title;
-            document.getElementById('mainDesc').textContent = item.desc;
+            document.getElementById('mainImage').alt = currentLang === 'en' ? 'Representative image' : '대표 이미지';
+            document.getElementById('mainTitle').textContent = localizeItem(item, 'title');
+            document.getElementById('mainDesc').textContent = localizeItem(item, 'desc');
             document.body.style.background = item.background;
+        }
+
+        function renderModeLabels() {
+            document.getElementById('chocoModeBtn').textContent = translations.modeChocolate[currentLang];
+            document.getElementById('iceModeBtn').textContent = translations.modeIcecream[currentLang];
+            document.getElementById('actionButton').textContent = currentMode === 'chocolate' ? translations.actionChocolate[currentLang] : translations.actionIcecream[currentLang];
+            document.getElementById('mainHeading').textContent = currentMode === 'chocolate' ? translations.headingChocolate[currentLang] : translations.headingIcecream[currentLang];
+            document.getElementById('homeButton').textContent = translations.homeButton[currentLang];
+            document.title = translations.pageTitle[currentLang];
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('chocoModeBtn').classList.toggle('active', mode === 'chocolate');
+            document.getElementById('iceModeBtn').classList.toggle('active', mode === 'icecream');
+
+            if (mode === 'chocolate') {
+                applyChocolate(chocolates[0]);
+            } else {
+                applyIcecream(icecreams[0]);
+            }
+            renderModeLabels();
         }
 
         function handleAction() {
@@ -245,9 +283,17 @@ const icecreams = [
             }
         }
 
-        // 초기 상태
-        setMode('chocolate');
-    </script>
+        function applyPageLanguage(lang) {
+            currentLang = lang;
+            renderModeLabels();
+            if (currentMode === 'chocolate') {
+                applyChocolate(chocolates[0]);
+            } else {
+                applyIcecream(icecreams[0]);
+            }
+        }
 
+        initLanguagePage();
+    </script>
 </body>
 </html>
