@@ -250,7 +250,7 @@
         </div>
     </div>
 
-    <script src="lang.js"></script>
+    <script src="./lang.js"></script>
     <script>
         const translations = {
             pageTitle: { ko: '카카오빈 초콜릿 제조 게임', en: 'Cocoa Bean Chocolate Maker' },
@@ -670,7 +670,7 @@
         }
 
         restartButton.addEventListener('click', resetGame);
-        initLanguagePage();
+        if (typeof initLanguagePage === 'function') initLanguagePage();
     </script>
 </body>
 </html>
