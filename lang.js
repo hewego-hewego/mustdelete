@@ -36,3 +36,30 @@ function handleLanguageButton(lang) {
     setLanguage(lang);
     applyLangButtonState(lang);
 }
+
+function initPageTransitions() {
+    window.requestAnimationFrame(() => {
+        document.body.classList.add('page-ready');
+    });
+
+    document.querySelectorAll('a[href]').forEach((link) => {
+        const href = link.getAttribute('href') || '';
+        const isLocalPage = href.endsWith('.html') && !href.startsWith('#');
+
+        if (!isLocalPage) {
+            return;
+        }
+
+        link.addEventListener('click', (event) => {
+            if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) {
+                return;
+            }
+
+            event.preventDefault();
+            document.body.classList.add('page-exit');
+            window.setTimeout(() => {
+                window.location.href = href;
+            }, 160);
+        });
+    });
+}
