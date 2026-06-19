@@ -15,9 +15,21 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 24px 16px;
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #3a1f0b 0%, #7b4f22 100%);
             color: #fff;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.16s ease, transform 0.16s ease;
+        }
+        body.page-ready {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        body.page-exit {
+            opacity: 0;
+            transform: translateY(10px);
         }
         .game-shell {
             width: min(980px, 92%);
@@ -91,6 +103,12 @@
             transform: translateY(-2px);
             box-shadow: 0 16px 35px rgba(0,0,0,0.18);
             background: rgba(255,255,255,0.18);
+        }
+        .choice-btn:focus-visible,
+        .small-btn:focus-visible,
+        .nav-link:focus-visible {
+            outline: 3px solid #ffe28a;
+            outline-offset: 3px;
         }
         .choice-btn.selected {
             background: linear-gradient(135deg, #d68b44 0%, #f5cc8d 100%);
@@ -202,13 +220,303 @@
             text-decoration: none;
             font-weight: 700;
             transition: background 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font: inherit;
         }
         .nav-link:hover {
             background: rgba(255,255,255,0.2);
         }
+        .encyclopedia-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.72);
+            z-index: 25;
+        }
+        .encyclopedia-overlay.open {
+            display: flex;
+        }
+        .encyclopedia-dialog {
+            width: min(1040px, 100%);
+            max-height: min(90vh, 900px);
+            overflow: auto;
+            background: rgba(18, 10, 6, 0.98);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 22px;
+            box-shadow: 0 28px 90px rgba(0,0,0,0.45);
+            padding: 22px;
+        }
+        .encyclopedia-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .encyclopedia-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .encyclopedia-list {
+            display: grid;
+            gap: 12px;
+        }
+        .encyclopedia-card {
+            position: relative;
+            display: grid;
+            grid-template-columns: 104px 1fr;
+            gap: 12px;
+            align-items: center;
+            width: 100%;
+            padding: 12px;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+            cursor: pointer;
+            text-align: left;
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+        .encyclopedia-card:hover:not(:disabled) {
+            transform: translateY(-1px);
+            background: rgba(255,255,255,0.1);
+        }
+        .encyclopedia-card.active {
+            border-color: #f5cc8d;
+            background: rgba(214, 139, 68, 0.22);
+        }
+        .encyclopedia-card:disabled {
+            cursor: not-allowed;
+            opacity: 1;
+        }
+        .encyclopedia-image-wrap {
+            width: 104px;
+            height: 78px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #000;
+            border: 1px solid rgba(255,255,255,0.08);
+            flex-shrink: 0;
+        }
+        .encyclopedia-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .encyclopedia-cover {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: grid;
+            place-items: center;
+            color: #777;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+        }
+        .encyclopedia-card-body h3 {
+            margin-bottom: 6px;
+            font-size: 1.05rem;
+        }
+        .encyclopedia-card-body p {
+            margin: 0;
+            color: #f0e6d6;
+            line-height: 1.6;
+        }
+        .encyclopedia-detail {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px;
+            padding: 16px;
+        }
+        .encyclopedia-detail img {
+            width: 100%;
+            border-radius: 16px;
+            margin: 14px 0;
+            box-shadow: 0 14px 36px rgba(0,0,0,0.28);
+        }
+        .encyclopedia-meta {
+            color: #f0e6d6;
+            line-height: 1.7;
+        }
+        .encyclopedia-lock {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.08);
+            color: #f8eac8;
+            font-weight: 700;
+            margin-top: 12px;
+        }
+        .bag-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 20;
+        }
+        .bag-overlay.open {
+            display: flex;
+        }
+        .bag-dialog {
+            width: min(920px, 100%);
+            max-height: min(88vh, 860px);
+            overflow: auto;
+            background: rgba(28, 15, 8, 0.98);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 22px;
+            box-shadow: 0 28px 90px rgba(0,0,0,0.45);
+            padding: 22px;
+        }
+        .bag-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .bag-header h2 {
+            font-size: 1.5rem;
+        }
+        .bag-grid {
+            display: grid;
+            grid-template-columns: 0.9fr 1.1fr;
+            gap: 16px;
+        }
+        .bag-list,
+        .bag-detail {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 18px;
+            padding: 16px;
+        }
+        .bag-list-items {
+            display: grid;
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .bag-item-btn {
+            width: 100%;
+            text-align: left;
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        }
+        .bag-item-btn:hover {
+            transform: translateY(-1px);
+            background: rgba(255,255,255,0.12);
+        }
+        .bag-item-btn.active {
+            border-color: #f5cc8d;
+            background: rgba(214, 139, 68, 0.24);
+        }
+        .bag-empty {
+            color: #f0e6d6;
+            line-height: 1.7;
+            margin-top: 12px;
+        }
+        .bag-meta {
+            color: #f0e6d6;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+        .bag-choice-list {
+            margin: 10px 0 0;
+            padding-left: 18px;
+            color: #f0e6d6;
+            line-height: 1.7;
+        }
+        .bag-choice-list li {
+            margin-bottom: 6px;
+        }
+        .bag-preview {
+            width: 100%;
+            border-radius: 16px;
+            margin: 14px 0;
+            box-shadow: 0 14px 36px rgba(0,0,0,0.28);
+        }
+        .bag-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        .bag-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.08);
+            color: #f8eac8;
+            font-weight: 700;
+        }
         @media (max-width: 860px) {
             .content {
                 grid-template-columns: 1fr;
+            }
+            .encyclopedia-grid {
+                grid-template-columns: 1fr;
+            }
+            .bag-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 640px) {
+            body {
+                align-items: flex-start;
+            }
+
+            .game-shell {
+                width: 100%;
+                border-radius: 20px;
+            }
+
+            header,
+            .content {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+
+            header {
+                padding-top: 22px;
+                padding-bottom: 22px;
+            }
+
+            .content {
+                padding-top: 20px;
+                padding-bottom: 22px;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            .bottom-nav {
+                flex-direction: column;
+            }
+
+            .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+            .bag-dialog {
+                padding: 18px;
             }
         }
     </style>
@@ -244,9 +552,64 @@
                 <div class="bottom-nav">
                     <a id="homeLink" href="index.html" class="nav-link">메인화면으로</a>
                     <a id="galleryLink" href="gallery.html" class="nav-link">갤러리로</a>
+                    <button class="nav-link" id="encyclopediaButton" type="button">도감</button>
+                    <button class="nav-link" id="bagButton" type="button">가방 열기</button>
                     <button class="nav-link" id="restartButton">다시 시작</button>
                 </div>
             </aside>
+        </div>
+    </div>
+
+    <div class="encyclopedia-overlay" id="encyclopediaOverlay" aria-hidden="true">
+        <div class="encyclopedia-dialog" role="dialog" aria-modal="true" aria-labelledby="encyclopediaTitle">
+            <div class="encyclopedia-header">
+                <div>
+                    <h2 id="encyclopediaTitle">초콜릿 도감</h2>
+                    <p id="encyclopediaSummary" class="bag-meta">만든 적 있는 특별 초콜릿만 자세히 볼 수 있습니다.</p>
+                </div>
+                <button class="small-btn" id="closeEncyclopediaButton" type="button">닫기</button>
+            </div>
+            <div class="encyclopedia-grid">
+                <section class="encyclopedia-list" id="encyclopediaList"></section>
+                <section class="encyclopedia-detail">
+                    <h3 id="encyclopediaDetailTitle">도감 항목을 선택하세요</h3>
+                    <div id="encyclopediaDetailBadge" class="encyclopedia-lock">잠금 상태</div>
+                    <img id="encyclopediaDetailImage" src="data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800' viewBox='0 0 1200 800'%3E%3Crect width='1200' height='800' fill='%23000000'/%3E%3C/svg%3E" alt="도감 미리보기">
+                    <div id="encyclopediaDetailMeta" class="encyclopedia-meta">도감 카드에서 초콜릿을 선택하면 제작 조건이 표시됩니다.</div>
+                    <div class="bag-actions">
+                        <button id="closeEncyclopediaButtonBottom" class="nav-link" type="button">도감 닫기</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <div class="bag-overlay" id="bagOverlay" aria-hidden="true">
+        <div class="bag-dialog" role="dialog" aria-modal="true" aria-labelledby="bagTitle">
+            <div class="bag-header">
+                <div>
+                    <h2 id="bagTitle">초콜릿 가방</h2>
+                    <p id="bagSummary" class="bag-meta">보관한 초콜릿을 확인하고 관리할 수 있습니다.</p>
+                </div>
+                <button class="small-btn" id="closeBagButton" type="button">닫기</button>
+            </div>
+            <div class="bag-grid">
+                <section class="bag-list">
+                    <span class="bag-chip" id="bagCountChip">0개 보관 중</span>
+                    <div id="bagListEmpty" class="bag-empty">아직 가방이 비어 있습니다. 결과 화면에서 초콜릿을 담아보세요.</div>
+                    <div id="bagListItems" class="bag-list-items"></div>
+                </section>
+                <section class="bag-detail">
+                    <h3 id="bagDetailTitle">초콜릿 정보를 선택하세요</h3>
+                    <p id="bagDetailText" class="bag-meta">왼쪽 목록에서 초콜릿을 클릭하면 정보가 표시됩니다.</p>
+                    <img id="bagDetailImage" class="bag-preview" src="https://images.unsplash.com/photo-1511381939415-e44015466834?q=80&w=1200&auto=format&fit=crop" alt="가방 초콜릿 미리보기">
+                    <div id="bagDetailMeta" class="bag-meta"></div>
+                    <div class="bag-actions">
+                        <button id="removeBagItemButton" class="small-btn" type="button" disabled>가방에서 버리기</button>
+                        <button id="closeBagButtonBottom" class="nav-link" type="button">가방 닫기</button>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
 
@@ -262,9 +625,84 @@
             stepLabel: { ko: '단계', en: 'Step' },
             homeLink: { ko: '메인화면으로', en: 'Back to Home' },
             galleryLink: { ko: '갤러리로', en: 'To Gallery' },
+            bagButton: { ko: '가방 열기', en: 'Open Bag' },
             restartButton: { ko: '다시 시작', en: 'Restart' },
             retryButton: { ko: '다시 도전하기', en: 'Try Again' }
         };
+
+        const bagTranslations = {
+            title: { ko: '초콜릿 가방', en: 'Chocolate Bag' },
+            summary: { ko: '보관한 초콜릿을 확인하고 관리할 수 있습니다.', en: 'Review and manage the chocolates you saved.' },
+            empty: { ko: '아직 가방이 비어 있습니다. 결과 화면에서 초콜릿을 담아보세요.', en: 'Your bag is empty. Save a chocolate from the result screen.' },
+            selectPrompt: { ko: '왼쪽 목록에서 초콜릿을 클릭하면 정보가 표시됩니다.', en: 'Click a chocolate on the left to see its details.' },
+            detailPrompt: { ko: '초콜릿 정보를 선택하세요', en: 'Select a chocolate to inspect it' },
+            removeButton: { ko: '가방에서 버리기', en: 'Discard from Bag' },
+            closeButton: { ko: '가방 닫기', en: 'Close Bag' },
+            openButton: { ko: '가방 열기', en: 'Open Bag' },
+            savePrompt: { ko: '이 초콜릿을 가방에 담을까요?', en: 'Put this chocolate in the bag?' },
+            saveButton: { ko: '가방에 담기', en: 'Save to Bag' },
+            skipButton: { ko: '가방에 담지 않기', en: 'Do Not Save' },
+            savedNotice: { ko: '가방에 담았습니다.', en: 'Saved to bag.' },
+            skipNotice: { ko: '가방에 담지 않았습니다.', en: 'Not saved.' },
+            bagCountSingular: { ko: '개 보관 중', en: 'item stored' },
+            bagCountPlural: { ko: '개 보관 중', en: 'items stored' }
+        };
+
+        const encyclopediaTranslations = {
+            title: { ko: '초콜릿 도감', en: 'Chocolate Encyclopedia' },
+            summary: { ko: '만든 적 있는 특별 초콜릿만 자세히 볼 수 있습니다.', en: 'Only chocolates you have made can be viewed in detail.' },
+            emptyDetail: { ko: '도감 카드에서 초콜릿을 선택하면 제작 조건이 표시됩니다.', en: 'Select a card to see how it is made.' },
+            locked: { ko: '미발견', en: 'Locked' },
+            unlocked: { ko: '제작 가능', en: 'Unlocked' },
+            closedButton: { ko: '도감 닫기', en: 'Close Encyclopedia' },
+            detailPrompt: { ko: '도감 항목을 선택하세요', en: 'Select an encyclopedia item' },
+            specialCount: { ko: '특별 초콜릿', en: 'special chocolates' }
+        };
+
+        const specialChocolateDefinitions = [
+            {
+                typeKey: 'dark',
+                image: 'https://images.unsplash.com/photo-1511381939415-e44015466834?q=80&w=1200&auto=format&fit=crop',
+                title: { ko: '다크 초콜릿', en: 'Dark Chocolate' },
+                condition: {
+                    ko: '카카오빈 선택에서 과숙 카카오빈을 고르거나, 로스팅 시간을 14분으로 선택하면 만들 수 있습니다. 씁쓸하고 깊은 맛이 특징입니다.',
+                    en: 'Choose overripe cocoa beans or roast for 14 minutes to create it. It has a deep, bitter flavor.'
+                },
+                steps: {
+                    ko: ['과숙 카카오빈 선택', '로스팅 14분'],
+                    en: ['Choose overripe cocoa beans', 'Roast for 14 minutes']
+                }
+            },
+            {
+                typeKey: 'milk',
+                image: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?q=80&w=1200&auto=format&fit=crop',
+                title: { ko: '밀크 초콜릿', en: 'Milk Chocolate' },
+                condition: {
+                    ko: '재료 혼합에서 우유 첨가를 고르면 만들 수 있습니다. 부드럽고 달콤한 균형이 특징입니다.',
+                    en: 'Choose Add milk in the mixing step. It becomes smooth and sweet.'
+                },
+                steps: {
+                    ko: ['재료 혼합에서 우유 첨가 선택'],
+                    en: ['Choose Add milk in the mixing step']
+                }
+            },
+            {
+                typeKey: 'white',
+                image: 'https://images.unsplash.com/photo-1548907040-4baa42d10919?q=80&w=1200&auto=format&fit=crop',
+                title: { ko: '화이트 초콜릿', en: 'White Chocolate' },
+                condition: {
+                    ko: '재료 혼합에서 코코아버터 + 우유를 고르면 만들 수 있습니다. 크리미하고 달콤한 맛이 특징입니다.',
+                    en: 'Choose Cocoa butter + milk in the mixing step. It is creamy and sweet.'
+                },
+                steps: {
+                    ko: ['재료 혼합에서 코코아버터 + 우유 선택'],
+                    en: ['Choose Cocoa butter + milk in the mixing step']
+                }
+            }
+        ];
+
+        const BAG_STORAGE_KEY = 'chocolateGameBagItems';
+        const ENCYCLOPEDIA_STORAGE_KEY = 'chocolateGameDiscoveredTypes';
 
         const steps = [
             {
@@ -344,6 +782,13 @@
         let grindValue = 6;
         let selectedChoices = [];
         let currentLang = 'ko';
+        let chocolateBag = loadBagItems();
+        let discoveredChocolateTypes = loadDiscoveredTypes();
+        let selectedBagItemId = null;
+        let selectedEncyclopediaType = null;
+        let currentResultChocolate = null;
+        let currentResultSummary = '';
+        let finalActionLocked = false;
 
         const controls = document.getElementById('controls');
         const stageTitle = document.getElementById('stageTitle');
@@ -359,8 +804,353 @@
         const statusHeading = document.getElementById('statusHeading');
         const homeLink = document.getElementById('homeLink');
         const galleryLink = document.getElementById('galleryLink');
+        const encyclopediaButton = document.getElementById('encyclopediaButton');
+        const encyclopediaOverlay = document.getElementById('encyclopediaOverlay');
+        const encyclopediaTitle = document.getElementById('encyclopediaTitle');
+        const encyclopediaSummary = document.getElementById('encyclopediaSummary');
+        const encyclopediaList = document.getElementById('encyclopediaList');
+        const encyclopediaDetailTitle = document.getElementById('encyclopediaDetailTitle');
+        const encyclopediaDetailBadge = document.getElementById('encyclopediaDetailBadge');
+        const encyclopediaDetailImage = document.getElementById('encyclopediaDetailImage');
+        const encyclopediaDetailMeta = document.getElementById('encyclopediaDetailMeta');
+        const closeEncyclopediaButton = document.getElementById('closeEncyclopediaButton');
+        const closeEncyclopediaButtonBottom = document.getElementById('closeEncyclopediaButtonBottom');
+        const bagButton = document.getElementById('bagButton');
+        const bagOverlay = document.getElementById('bagOverlay');
+        const bagTitle = document.getElementById('bagTitle');
+        const bagSummary = document.getElementById('bagSummary');
+        const bagCountChip = document.getElementById('bagCountChip');
+        const bagListEmpty = document.getElementById('bagListEmpty');
+        const bagListItems = document.getElementById('bagListItems');
+        const bagDetailTitle = document.getElementById('bagDetailTitle');
+        const bagDetailText = document.getElementById('bagDetailText');
+        const bagDetailImage = document.getElementById('bagDetailImage');
+        const bagDetailMeta = document.getElementById('bagDetailMeta');
+        const removeBagItemButton = document.getElementById('removeBagItemButton');
+        const closeBagButton = document.getElementById('closeBagButton');
+        const closeBagButtonBottom = document.getElementById('closeBagButtonBottom');
         const scoreLabel = document.getElementById('scoreLabel');
         const stepLabel = document.getElementById('stepLabel');
+
+        function loadBagItems() {
+            try {
+                const raw = localStorage.getItem(BAG_STORAGE_KEY);
+                const parsed = raw ? JSON.parse(raw) : [];
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function saveBagItems() {
+            localStorage.setItem(BAG_STORAGE_KEY, JSON.stringify(chocolateBag));
+        }
+
+        function loadDiscoveredTypes() {
+            try {
+                const raw = localStorage.getItem(ENCYCLOPEDIA_STORAGE_KEY);
+                const parsed = raw ? JSON.parse(raw) : [];
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function saveDiscoveredTypes() {
+            localStorage.setItem(ENCYCLOPEDIA_STORAGE_KEY, JSON.stringify(discoveredChocolateTypes));
+        }
+
+        function isSpecialChocolate(typeKey) {
+            return specialChocolateDefinitions.some((item) => item.typeKey === typeKey);
+        }
+
+        function isChocolateDiscovered(typeKey) {
+            return discoveredChocolateTypes.includes(typeKey);
+        }
+
+        function markChocolateDiscovered(typeKey) {
+            if (!isSpecialChocolate(typeKey) || isChocolateDiscovered(typeKey)) {
+                return;
+            }
+            discoveredChocolateTypes.push(typeKey);
+            saveDiscoveredTypes();
+        }
+
+        function getBagCountLabel(count) {
+            const label = count === 1 ? bagTranslations.bagCountSingular[currentLang] : bagTranslations.bagCountPlural[currentLang];
+            return `${count} ${label}`;
+        }
+
+        function createChocolateBagEntry(chocolateType, resultLabel) {
+            const id = `bag_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+            const createdAt = new Date().toISOString();
+            return {
+                id,
+                typeKey: chocolateType.typeKey,
+                name: getChocolateTypeName(chocolateType.typeKey),
+                image: chocolateType.image,
+                score,
+                createdAt,
+                choices: selectedChoices.map((item) => ({ ...item })),
+                resultLabel,
+                language: currentLang
+            };
+        }
+
+        function updateBagSummary() {
+            const count = chocolateBag.length;
+            bagButton.textContent = currentLang === 'en' ? `${translations.bagButton[currentLang]} (${count})` : `${translations.bagButton[currentLang]} (${count})`;
+            bagTitle.textContent = bagTranslations.title[currentLang];
+            bagSummary.textContent = bagTranslations.summary[currentLang];
+            bagListEmpty.textContent = bagTranslations.empty[currentLang];
+            bagDetailTitle.textContent = bagTranslations.detailPrompt[currentLang];
+            bagDetailText.textContent = bagTranslations.selectPrompt[currentLang];
+            removeBagItemButton.textContent = bagTranslations.removeButton[currentLang];
+            closeBagButton.textContent = bagTranslations.closeButton[currentLang];
+            closeBagButtonBottom.textContent = bagTranslations.closeButton[currentLang];
+            bagCountChip.textContent = getBagCountLabel(count);
+            renderBagPanel();
+        }
+
+        function getEncyclopediaCountLabel() {
+            const count = discoveredChocolateTypes.filter((typeKey) => isSpecialChocolate(typeKey)).length;
+            return `${count}/3`;
+        }
+
+        function updateEncyclopediaSummary() {
+            encyclopediaButton.textContent = `${currentLang === 'en' ? 'Encyclopedia' : '도감'} (${getEncyclopediaCountLabel()})`;
+            encyclopediaTitle.textContent = encyclopediaTranslations.title[currentLang];
+            encyclopediaSummary.textContent = encyclopediaTranslations.summary[currentLang];
+            closeEncyclopediaButton.textContent = encyclopediaTranslations.closedButton[currentLang];
+            closeEncyclopediaButtonBottom.textContent = encyclopediaTranslations.closedButton[currentLang];
+            renderEncyclopediaPanel();
+        }
+
+        function getEncyclopediaCardState(item) {
+            return isChocolateDiscovered(item.typeKey);
+        }
+
+        function renderEncyclopediaPanel() {
+            encyclopediaList.innerHTML = '';
+            const items = specialChocolateDefinitions;
+
+            items.forEach((item) => {
+                const unlocked = getEncyclopediaCardState(item);
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className = `encyclopedia-card${selectedEncyclopediaType === item.typeKey ? ' active' : ''}`;
+                card.disabled = !unlocked;
+                const imageMarkup = unlocked
+                    ? `<img class="encyclopedia-image" src="${item.image}" alt="${item.title[currentLang]}">`
+                    : `<div class="encyclopedia-cover">LOCKED</div>`;
+                card.innerHTML = `
+                    <div class="encyclopedia-image-wrap">${imageMarkup}</div>
+                    <div class="encyclopedia-card-body">
+                        <h3>${item.title[currentLang]}</h3>
+                        <p>${unlocked ? item.condition[currentLang] : encyclopediaTranslations.locked[currentLang]}</p>
+                    </div>
+                `;
+                if (unlocked) {
+                    card.addEventListener('click', () => {
+                        selectedEncyclopediaType = item.typeKey;
+                        renderEncyclopediaPanel();
+                        renderEncyclopediaDetail(item);
+                    });
+                }
+                encyclopediaList.appendChild(card);
+            });
+
+            const selectedItem = specialChocolateDefinitions.find((item) => item.typeKey === selectedEncyclopediaType && getEncyclopediaCardState(item))
+                || specialChocolateDefinitions.find((item) => getEncyclopediaCardState(item))
+                || null;
+
+            if (selectedItem) {
+                selectedEncyclopediaType = selectedItem.typeKey;
+                renderEncyclopediaDetail(selectedItem);
+            } else {
+                clearEncyclopediaDetail();
+            }
+        }
+
+        function renderEncyclopediaDetail(item) {
+            const unlocked = getEncyclopediaCardState(item);
+            encyclopediaDetailTitle.textContent = item.title[currentLang];
+            encyclopediaDetailBadge.textContent = unlocked ? encyclopediaTranslations.unlocked[currentLang] : encyclopediaTranslations.locked[currentLang];
+            encyclopediaDetailImage.src = unlocked ? item.image : 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%271200%27 height=%27800%27 viewBox=%270 0 1200 800%27%3E%3Crect width=%271200%27 height=%27800%27 fill=%27000000%27/%3E%3C/svg%3E';
+            encyclopediaDetailImage.alt = item.title[currentLang];
+            encyclopediaDetailMeta.innerHTML = unlocked
+                ? `
+                    <p>${item.condition[currentLang]}</p>
+                    <p>${currentLang === 'en' ? 'How to make it' : '제작 조건'}:</p>
+                    <ul class="bag-choice-list">${item.steps[currentLang].map((step) => `<li>${step}</li>`).join('')}</ul>
+                `
+                : `<p>${encyclopediaTranslations.emptyDetail[currentLang]}</p>`;
+        }
+
+        function clearEncyclopediaDetail() {
+            encyclopediaDetailTitle.textContent = encyclopediaTranslations.detailPrompt[currentLang];
+            encyclopediaDetailBadge.textContent = encyclopediaTranslations.locked[currentLang];
+            encyclopediaDetailImage.src = 'data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%271200%27 height=%27800%27 viewBox=%270 0 1200 800%27%3E%3Crect width=%271200%27 height=%27800%27 fill=%27000000%27/%3E%3C/svg%3E';
+            encyclopediaDetailMeta.textContent = encyclopediaTranslations.emptyDetail[currentLang];
+        }
+
+        function openEncyclopedia() {
+            updateEncyclopediaSummary();
+            encyclopediaOverlay.classList.add('open');
+            encyclopediaOverlay.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeEncyclopedia() {
+            encyclopediaOverlay.classList.remove('open');
+            encyclopediaOverlay.setAttribute('aria-hidden', 'true');
+        }
+
+        function renderBagPanel() {
+            bagListItems.innerHTML = '';
+            const hasItems = chocolateBag.length > 0;
+            bagListEmpty.style.display = hasItems ? 'none' : 'block';
+
+            chocolateBag.forEach((item, index) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = `bag-item-btn${item.id === selectedBagItemId ? ' active' : ''}`;
+                button.innerHTML = `<strong>${index + 1}. ${item.name}</strong><br><span style="opacity:.85;">${formatBagItemSubtitle(item)}</span>`;
+                button.addEventListener('click', () => {
+                    selectedBagItemId = item.id;
+                    renderBagPanel();
+                    renderBagDetail(item);
+                });
+                bagListItems.appendChild(button);
+            });
+
+            if (hasItems) {
+                const selectedItem = chocolateBag.find((item) => item.id === selectedBagItemId) || chocolateBag[chocolateBag.length - 1];
+                if (selectedItem) {
+                    selectedBagItemId = selectedItem.id;
+                    renderBagDetail(selectedItem);
+                }
+            } else {
+                selectedBagItemId = null;
+                clearBagDetail();
+            }
+
+            removeBagItemButton.disabled = !selectedBagItemId;
+        }
+
+        function formatBagItemSubtitle(item) {
+            const when = new Date(item.createdAt);
+            const timeText = when.toLocaleString(currentLang === 'en' ? 'en-US' : 'ko-KR', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            return `${item.resultLabel} · ${timeText}`;
+        }
+
+        function getBagChoiceStepLabel(stepKey) {
+            const stepLabels = {
+                bean: { ko: '카카오빈', en: 'Cocoa Beans' },
+                roast: { ko: '로스팅', en: 'Roasting' },
+                grind: { ko: '분쇄', en: 'Grinding' },
+                mix: { ko: '혼합', en: 'Mixing' },
+                finish: { ko: '완성', en: 'Finish' }
+            };
+            return stepLabels[stepKey]?.[currentLang] || stepKey;
+        }
+
+        function renderSavedChoices(items) {
+            if (!items || !items.length) {
+                return currentLang === 'en' ? 'No saved choices yet.' : '아직 저장된 선택이 없습니다.';
+            }
+
+            const lines = items.map((item) => `${getBagChoiceStepLabel(item.stepKey)}: ${item.label}`);
+            return `<ul class="bag-choice-list">${lines.map((line) => `<li>${line}</li>`).join('')}</ul>`;
+        }
+
+        function renderBagDetail(item) {
+            bagDetailTitle.textContent = item.name;
+            bagDetailText.textContent = item.resultLabel;
+            bagDetailImage.src = item.image;
+            bagDetailImage.alt = item.name;
+            bagDetailMeta.innerHTML = `
+                <p>${currentLang === 'en' ? 'Score' : '점수'}: <strong>${item.score}</strong></p>
+                <p>${currentLang === 'en' ? 'Saved at' : '저장 시각'}: <strong>${new Date(item.createdAt).toLocaleString(currentLang === 'en' ? 'en-US' : 'ko-KR')}</strong></p>
+                <p>${currentLang === 'en' ? 'Type' : '종류'}: <strong>${item.name}</strong></p>
+                <p>${currentLang === 'en' ? 'Choice path' : '선택 경로'}:</p>
+                ${renderSavedChoices(item.choices)}
+            `;
+            removeBagItemButton.disabled = false;
+        }
+
+        function clearBagDetail() {
+            bagDetailTitle.textContent = bagTranslations.detailPrompt[currentLang];
+            bagDetailText.textContent = bagTranslations.selectPrompt[currentLang];
+            bagDetailImage.src = 'https://images.unsplash.com/photo-1511381939415-e44015466834?q=80&w=1200&auto=format&fit=crop';
+            bagDetailImage.alt = bagTranslations.detailPrompt[currentLang];
+            bagDetailMeta.innerHTML = '';
+            removeBagItemButton.disabled = true;
+        }
+
+        function openBag() {
+            updateBagSummary();
+            bagOverlay.classList.add('open');
+            bagOverlay.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeBag() {
+            bagOverlay.classList.remove('open');
+            bagOverlay.setAttribute('aria-hidden', 'true');
+        }
+
+        function addCurrentChocolateToBag() {
+            if (!currentResultChocolate) return;
+            const entry = createChocolateBagEntry(currentResultChocolate, currentResultSummary || bagTranslations.summary[currentLang]);
+            chocolateBag.unshift(entry);
+            selectedBagItemId = entry.id;
+            saveBagItems();
+            updateBagSummary();
+            statusText.textContent = currentLang === 'en' ? 'Saved to bag.' : '가방에 담았습니다.';
+        }
+
+        function removeSelectedBagItem() {
+            if (!selectedBagItemId) return;
+            chocolateBag = chocolateBag.filter((item) => item.id !== selectedBagItemId);
+            selectedBagItemId = chocolateBag[0]?.id || null;
+            saveBagItems();
+            updateBagSummary();
+        }
+
+        function renderFinalSaveActions(chocolateType) {
+            const actionWrap = document.createElement('div');
+            actionWrap.className = 'bag-actions';
+
+            const saveBtn = document.createElement('button');
+            saveBtn.type = 'button';
+            saveBtn.className = 'small-btn';
+            saveBtn.textContent = bagTranslations.saveButton[currentLang];
+            saveBtn.addEventListener('click', () => {
+                if (finalActionLocked) return;
+                finalActionLocked = true;
+                addCurrentChocolateToBag();
+                resetGame();
+            });
+
+            const skipBtn = document.createElement('button');
+            skipBtn.type = 'button';
+            skipBtn.className = 'nav-link';
+            skipBtn.textContent = bagTranslations.skipButton[currentLang];
+            skipBtn.addEventListener('click', () => {
+                if (finalActionLocked) return;
+                finalActionLocked = true;
+                statusText.textContent = bagTranslations.skipNotice[currentLang];
+                resetGame();
+            });
+
+            actionWrap.appendChild(saveBtn);
+            actionWrap.appendChild(skipBtn);
+            return actionWrap;
+        }
 
         function getLocalized(obj, key) {
             if (obj[key] && typeof obj[key] === 'object' && obj[key][currentLang] !== undefined) {
@@ -491,10 +1281,10 @@
                 return { typeKey: 'almond', image: 'https://images.unsplash.com/photo-1600185364415-3d95005b6e8d?q=80&w=1200&auto=format&fit=crop' };
             }
             if (mixChoice === 'butterMilk') {
-                return { typeKey: 'white', image: 'https://images.unsplash.com/photo-1510070009289-b5bc34383727?q=80&w=1200&auto=format&fit=crop' };
+                return { typeKey: 'white', image: 'https://images.unsplash.com/photo-1548907040-4baa42d10919?q=80&w=1200&auto=format&fit=crop' };
             }
             if (mixChoice === 'addMilk') {
-                return { typeKey: 'milk', image: 'https://images.unsplash.com/photo-1548907040-4baa42d10919?q=80&w=1200&auto=format&fit=crop' };
+                return { typeKey: 'milk', image: 'https://images.unsplash.com/photo-1549007994-cb92caebd54b?q=80&w=1200&auto=format&fit=crop' };
             }
             if (beanChoice === 'overripe' || roastChoice === '14') {
                 return { typeKey: 'dark', image: 'https://images.unsplash.com/photo-1511381939415-e44015466834?q=80&w=1200&auto=format&fit=crop' };
@@ -601,17 +1391,28 @@
 
         function showFinalResult() {
             controls.innerHTML = '';
+            finalActionLocked = false;
             const chocolateType = getChocolateType();
+            currentResultChocolate = chocolateType;
+            markChocolateDiscovered(chocolateType.typeKey);
             stageTitle.textContent = currentLang === 'en' ? `Completed: ${getChocolateTypeName(chocolateType.typeKey)}` : `완성: ${getChocolateTypeName(chocolateType.typeKey)}이 만들어졌습니다!`;
             stageDescription.textContent = currentLang === 'en'
                 ? `Your choices created ${getChocolateTypeName(chocolateType.typeKey)}. Check the results and try again.`
                 : `그동안의 선택으로 ${getChocolateTypeName(chocolateType.typeKey)}이 완성되었습니다. 결과를 확인하고 다시 도전해보세요.`;
+            currentResultSummary = stageDescription.textContent;
             stageImage.src = chocolateType.image;
             progressFill.style.width = '100%';
             stepCount.textContent = steps.length;
             const finalMsg = document.createElement('p');
             finalMsg.innerHTML = getFinalMessage(getChocolateTypeName(chocolateType.typeKey));
             controls.appendChild(finalMsg);
+
+            const savePrompt = document.createElement('p');
+            savePrompt.className = 'bag-meta';
+            savePrompt.textContent = bagTranslations.savePrompt[currentLang];
+            controls.appendChild(savePrompt);
+
+            controls.appendChild(renderFinalSaveActions(chocolateType));
 
             const resultBlock = document.createElement('div');
             resultBlock.className = 'result-block';
@@ -634,6 +1435,7 @@
             retryBtn.textContent = translations.retryButton[currentLang];
             retryBtn.addEventListener('click', resetGame);
             controls.appendChild(retryBtn);
+            updateBagSummary();
         }
 
         function renderUiLanguage() {
@@ -645,8 +1447,12 @@
             stepLabel.textContent = translations.stepLabel[currentLang];
             homeLink.textContent = translations.homeLink[currentLang];
             galleryLink.textContent = translations.galleryLink[currentLang];
+            encyclopediaButton.textContent = `${currentLang === 'en' ? 'Encyclopedia' : '도감'} (${getEncyclopediaCountLabel()})`;
+            bagButton.textContent = translations.bagButton[currentLang];
             restartButton.textContent = translations.restartButton[currentLang];
             document.title = translations.pageTitle[currentLang];
+            updateEncyclopediaSummary();
+            updateBagSummary();
         }
 
         function applyPageLanguage(lang) {
@@ -664,13 +1470,34 @@
             score = 0;
             grindValue = 6;
             selectedChoices = [];
+            finalActionLocked = false;
             scoreValue.textContent = score;
             statusText.textContent = getLocalized(translations, 'statusIntro');
             renderStep();
         }
 
         restartButton.addEventListener('click', resetGame);
+        encyclopediaButton.addEventListener('click', openEncyclopedia);
+        closeEncyclopediaButton.addEventListener('click', closeEncyclopedia);
+        closeEncyclopediaButtonBottom.addEventListener('click', closeEncyclopedia);
+        encyclopediaOverlay.addEventListener('click', (event) => {
+            if (event.target === encyclopediaOverlay) {
+                closeEncyclopedia();
+            }
+        });
+        bagButton.addEventListener('click', openBag);
+        closeBagButton.addEventListener('click', closeBag);
+        closeBagButtonBottom.addEventListener('click', closeBag);
+        removeBagItemButton.addEventListener('click', removeSelectedBagItem);
+        bagOverlay.addEventListener('click', (event) => {
+            if (event.target === bagOverlay) {
+                closeBag();
+            }
+        });
         if (typeof initLanguagePage === 'function') initLanguagePage();
+        if (typeof initPageTransitions === 'function') initPageTransitions();
+        updateEncyclopediaSummary();
+        updateBagSummary();
     </script>
 </body>
 </html>
