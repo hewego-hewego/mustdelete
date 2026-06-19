@@ -8,13 +8,26 @@
     <style>
         body {
             margin: 0;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 24px 16px;
             font-family: Arial, sans-serif;
-            transition: background 0.5s ease;
             background: linear-gradient(135deg, #4b2e2e, #8b5a2b);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.16s ease, transform 0.16s ease, background 0.5s ease;
+        }
+
+        body.page-ready {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        body.page-exit {
+            opacity: 0;
+            transform: translateY(10px);
         }
 
         .container {
@@ -24,7 +37,7 @@
             padding: 26px;
             border-radius: 18px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-            width: 440px;
+            width: min(440px, calc(100vw - 32px));
         }
 
         .mode-buttons {
@@ -58,7 +71,7 @@
 
         img {
             width: 100%;
-            height: 260px;
+            height: clamp(220px, 50vw, 260px);
             object-fit: cover;
             border-radius: 14px;
             margin-top: 14px;
@@ -85,6 +98,14 @@
             transform: scale(1.03);
         }
 
+        button:focus-visible,
+        .home-btn:focus-visible,
+        .mode-btn:focus-visible,
+        #actionButton:focus-visible {
+            outline: 3px solid #111;
+            outline-offset: 3px;
+        }
+
         .home-btn {
             position: absolute;
             top: 20px;
@@ -103,6 +124,49 @@
 
         .home-btn:hover {
             background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        @media (max-width: 640px) {
+            body {
+                align-items: flex-start;
+                gap: 0;
+                padding: 16px 12px 20px;
+            }
+
+            .home-btn {
+                position: absolute;
+                top: 16px;
+                left: 12px;
+                display: inline-block;
+                margin: 0;
+                z-index: 2;
+            }
+
+            .container {
+                padding: 56px 16px 20px;
+                border-radius: 16px;
+                width: 100%;
+            }
+
+            .mode-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .mode-btn,
+            #actionButton {
+                width: 100%;
+            }
+
+            .mode-buttons {
+                margin-bottom: 14px;
+            }
+
+            img {
+                height: auto;
+                max-height: 280px;
+            }
+
         }
     </style>
 </head>
@@ -294,6 +358,7 @@
         }
 
         if (typeof initLanguagePage === 'function') initLanguagePage();
+        if (typeof initPageTransitions === 'function') initPageTransitions();
     </script>
 </body>
 </html>
