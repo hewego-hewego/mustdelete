@@ -13,12 +13,26 @@
         }
 
         body {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 24px 16px;
             font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.16s ease, transform 0.16s ease;
+        }
+
+        body.page-ready {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        body.page-exit {
+            opacity: 0;
+            transform: translateY(10px);
         }
 
         .main-container {
@@ -78,6 +92,12 @@
             transform: translateY(-1px);
         }
 
+        .main-btn:focus-visible,
+        .lang-btn:focus-visible {
+            outline: 3px solid #111;
+            outline-offset: 3px;
+        }
+
         .info {
             margin-top: 40px;
             padding-top: 30px;
@@ -124,6 +144,40 @@
             }
             50% {
                 transform: translateY(-10px);
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                align-items: flex-start;
+            }
+
+            .main-container {
+                width: 100%;
+                padding: 44px 22px 32px;
+                border-radius: 18px;
+            }
+
+            h1 {
+                font-size: clamp(2rem, 10vw, 3rem);
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .main-btn {
+                width: 100%;
+            }
+
+            .lang-switch {
+                top: 12px;
+                right: 12px;
+                gap: 8px;
             }
         }
     </style>
@@ -175,6 +229,7 @@
         document.getElementById('enBtn').addEventListener('click', () => handleLanguageButton('en'));
 
         if (typeof initLanguagePage === 'function') initLanguagePage();
+        if (typeof initPageTransitions === 'function') initPageTransitions();
     </script>
 </body>
 
