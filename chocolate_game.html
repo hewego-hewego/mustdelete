@@ -266,6 +266,22 @@
         .encyclopedia-list {
             display: grid;
             gap: 12px;
+            max-height: min(70vh, calc(100dvh - 240px));
+            overflow-y: auto;
+            padding-right: 6px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(245, 204, 141, 0.7) rgba(255,255,255,0.08);
+        }
+        .encyclopedia-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        .encyclopedia-list::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.08);
+            border-radius: 999px;
+        }
+        .encyclopedia-list::-webkit-scrollbar-thumb {
+            background: rgba(245, 204, 141, 0.7);
+            border-radius: 999px;
         }
         .encyclopedia-card {
             position: relative;
@@ -377,6 +393,19 @@
             border-radius: 22px;
             box-shadow: 0 28px 90px rgba(0,0,0,0.45);
             padding: 22px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(245, 204, 141, 0.75) rgba(255,255,255,0.08);
+        }
+        .bag-dialog::-webkit-scrollbar {
+            width: 9px;
+        }
+        .bag-dialog::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.08);
+            border-radius: 999px;
+        }
+        .bag-dialog::-webkit-scrollbar-thumb {
+            background: rgba(245, 204, 141, 0.75);
+            border-radius: 999px;
         }
         .bag-header {
             display: flex;
@@ -400,6 +429,28 @@
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 18px;
             padding: 16px;
+        }
+        .bag-detail {
+            padding-right: 8px;
+        }
+        .bag-choice-scroll {
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 6px;
+            margin-top: 6px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(245, 204, 141, 0.7) rgba(255,255,255,0.08);
+        }
+        .bag-choice-scroll::-webkit-scrollbar {
+            width: 8px;
+        }
+        .bag-choice-scroll::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.08);
+            border-radius: 999px;
+        }
+        .bag-choice-scroll::-webkit-scrollbar-thumb {
+            background: rgba(245, 204, 141, 0.7);
+            border-radius: 999px;
         }
         .bag-list-items {
             display: grid;
@@ -442,7 +493,14 @@
             line-height: 1.7;
         }
         .bag-choice-list li {
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+        }
+        .bag-choice-desc {
+            display: block;
+            margin-top: 3px;
+            color: #f8ebc8;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
         .bag-preview {
             width: 100%;
@@ -698,6 +756,32 @@
                     ko: ['재료 혼합에서 코코아버터 + 우유 선택'],
                     en: ['Choose Cocoa butter + milk in the mixing step']
                 }
+            },
+            {
+                typeKey: 'mint',
+                image: 'img/mint.jfif',
+                title: { ko: '민트 초콜릿', en: 'Mint Chocolate' },
+                condition: {
+                    ko: '재료 혼합에서 민트 추출물 추가를 선택하면 만들 수 있습니다. 밀크 초콜릿 베이스에 민트 향을 더해 상쾌한 맛을 내는 방식입니다.',
+                    en: 'Choose Add mint extract in the mixing step. It adds a cool, refreshing mint flavor to a milk-chocolate base.'
+                },
+                steps: {
+                    ko: ['재료 혼합에서 민트 추출물 추가 선택'],
+                    en: ['Choose Add mint extract in the mixing step']
+                }
+            },
+            {
+                typeKey: 'strawberry',
+                image: 'img/strawberry.jpg',
+                title: { ko: '딸기 초콜릿', en: 'Strawberry Chocolate' },
+                condition: {
+                    ko: '재료 혼합에서 딸기 퓌레 또는 딸기 분말을 추가하면 만들 수 있습니다. 밀크 초콜릿 베이스에 과일 향을 더해 상큼한 맛을 내는 방식입니다.',
+                    en: 'Choose Add strawberry puree or strawberry powder in the mixing step. It adds a bright fruity flavor to a milk-chocolate base.'
+                },
+                steps: {
+                    ko: ['재료 혼합에서 딸기 퓌레 또는 딸기 분말 추가 선택'],
+                    en: ['Choose Add strawberry puree or strawberry powder in the mixing step']
+                }
             }
         ];
 
@@ -759,6 +843,8 @@
                 choices: [
                     { key: 'butterMilk', label: '코코아버터 + 우유', labelEn: 'Cocoa butter + milk', score: 18, result: '화이트 초콜릿의 기본 재료를 선택했습니다.', resultEn: 'You chose the base for white chocolate.' },
                     { key: 'addMilk', label: '우유 첨가', labelEn: 'Add milk', score: 16, result: '우유가 더해져 부드러운 밀크 초콜릿이 만들어집니다.', resultEn: 'Milk makes it creamy milk chocolate.' },
+                    { key: 'mintFlavor', label: '민트 추출물 추가', labelEn: 'Add mint extract', score: 20, result: '민트 추출물이 더해져 시원하고 상쾌한 민트 초콜릿이 완성됩니다.', resultEn: 'Mint extract creates a cool, refreshing mint chocolate.' },
+                    { key: 'strawberryFlavor', label: '딸기 퓌레/분말 추가', labelEn: 'Add strawberry puree/powder', score: 20, result: '딸기 성분이 더해져 상큼한 딸기 초콜릿이 완성됩니다.', resultEn: 'Strawberry flavoring gives a bright, fruity chocolate.' },
                     { key: 'sugar', label: '설탕 많이', labelEn: 'Lots of sugar', score: 8, result: '단맛이 강하지만 카카오 향이 조금 묻힐 수 있습니다.', resultEn: 'Too sweet, the cocoa flavor is less strong.' },
                     { key: 'nuts', label: '견과류 추가', labelEn: 'Add nuts', score: 14, result: '견과류가 더해져 고소한 아몬드 초콜릿 스타일이 됩니다.', resultEn: 'Nuts add a rich, crunchy almond style.' }
                 ]
@@ -914,7 +1000,7 @@
 
         function getEncyclopediaCountLabel() {
             const count = discoveredChocolateTypes.filter((typeKey) => isSpecialChocolate(typeKey)).length;
-            return `${count}/3`;
+            return `${count}/5`;
         }
 
         function updateEncyclopediaSummary() {
@@ -1064,8 +1150,16 @@
                 return currentLang === 'en' ? 'No saved choices yet.' : '아직 저장된 선택이 없습니다.';
             }
 
-            const lines = items.map((item) => `${getBagChoiceStepLabel(item.stepKey)}: ${item.label}`);
-            return `<ul class="bag-choice-list">${lines.map((line) => `<li>${line}</li>`).join('')}</ul>`;
+            const lines = items.map((item) => {
+                const explanation = getImpactMessage(item.stepKey, item.choiceKey);
+                return `
+                    <li>
+                        <strong>${getBagChoiceStepLabel(item.stepKey)}:</strong> ${item.label}
+                        <span class="bag-choice-desc">${explanation}</span>
+                    </li>
+                `;
+            });
+            return `<ul class="bag-choice-list">${lines.join('')}</ul>`;
         }
 
         function renderBagDetail(item) {
@@ -1078,7 +1172,7 @@
                 <p>${currentLang === 'en' ? 'Saved at' : '저장 시각'}: <strong>${new Date(item.createdAt).toLocaleString(currentLang === 'en' ? 'en-US' : 'ko-KR')}</strong></p>
                 <p>${currentLang === 'en' ? 'Type' : '종류'}: <strong>${item.name}</strong></p>
                 <p>${currentLang === 'en' ? 'Choice path' : '선택 경로'}:</p>
-                ${renderSavedChoices(item.choices)}
+                <div class="bag-choice-scroll">${renderSavedChoices(item.choices)}</div>
             `;
             removeBagItemButton.disabled = false;
         }
@@ -1280,6 +1374,12 @@
             if (mixChoice === 'nuts') {
                 return { typeKey: 'almond', image: 'https://images.unsplash.com/photo-1600185364415-3d95005b6e8d?q=80&w=1200&auto=format&fit=crop' };
             }
+            if (mixChoice === 'mintFlavor') {
+                return { typeKey: 'mint', image: 'img/mint.jfif' };
+            }
+            if (mixChoice === 'strawberryFlavor') {
+                return { typeKey: 'strawberry', image: 'img/strawberry.jpg' };
+            }
             if (mixChoice === 'butterMilk') {
                 return { typeKey: 'white', image: 'https://images.unsplash.com/photo-1548907040-4baa42d10919?q=80&w=1200&auto=format&fit=crop' };
             }
@@ -1298,7 +1398,9 @@
                 dark: { ko: '다크 초콜릿', en: 'Dark Chocolate' },
                 milk: { ko: '밀크 초콜릿', en: 'Milk Chocolate' },
                 white: { ko: '화이트 초콜릿', en: 'White Chocolate' },
-                almond: { ko: '아몬드 초콜릿', en: 'Almond Chocolate' }
+                almond: { ko: '아몬드 초콜릿', en: 'Almond Chocolate' },
+                mint: { ko: '민트 초콜릿', en: 'Mint Chocolate' },
+                strawberry: { ko: '딸기 초콜릿', en: 'Strawberry Chocolate' }
             };
             return names[typeKey][currentLang];
         }
@@ -1340,6 +1442,12 @@
                     }
                     if (choiceKey === 'addMilk') {
                         return isEn ? 'Milk adds smoothness and balance to milk chocolate.' : '우유를 첨가해 밀크 초콜릿을 만들었습니다. 카카오의 쌉쌀함에 부드러운 우유 단맛이 더해져 균형 잡힌 맛이 나옵니다.';
+                    }
+                    if (choiceKey === 'mintFlavor') {
+                        return isEn ? 'Mint extract gives your chocolate a cool, refreshing mint flavor.' : '민트 추출물을 더해 시원하고 상쾌한 민트 초콜릿 풍미가 살아났습니다.';
+                    }
+                    if (choiceKey === 'strawberryFlavor') {
+                        return isEn ? 'Strawberry puree or powder adds a bright, fruity note that feels like real strawberry chocolate.' : '딸기 퓌레나 분말을 더해 실제 딸기 초콜릿처럼 상큼하고 과일향이 살아납니다.';
                     }
                     if (choiceKey === 'sugar') {
                         return isEn ? 'Extra sugar makes it sweeter but can mask some cocoa flavor.' : '설탕을 많이 넣으면 단맛이 강해지지만, 카카오 고유의 풍미가 덜 살아납니다. 기본 초콜릿 느낌으로 남을 수 있습니다.';
@@ -1384,7 +1492,9 @@
                 dark: { ko: '다크 초콜릿', en: 'Dark Chocolate' },
                 milk: { ko: '밀크 초콜릿', en: 'Milk Chocolate' },
                 white: { ko: '화이트 초콜릿', en: 'White Chocolate' },
-                almond: { ko: '아몬드 초콜릿', en: 'Almond Chocolate' }
+                almond: { ko: '아몬드 초콜릿', en: 'Almond Chocolate' },
+                mint: { ko: '민트 초콜릿', en: 'Mint Chocolate' },
+                strawberry: { ko: '딸기 초콜릿', en: 'Strawberry Chocolate' }
             };
             return names[typeKey][currentLang];
         }
